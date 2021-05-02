@@ -1,0 +1,20 @@
+sudo: required
+language: generic
+services:
+  - docker
+before_install:
+  - docker build -t shaddass/react-test -f ./client/dockerfile.dev ./client
+script:
+  - docker run -e CI=true shaddass/react-test npm test
+after_sucess:
+  - docker build -t shaddass/multi-client ./client
+  - docker build -t shaddass/multi-nginx ./nginx
+  - docker build -t shaddass/multi-server ./server
+  - docker build -t shaddass/multi-worker ./worker
+# Logs into docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+# Pushigs images to Docker Hub  
+  - docker push shaddass/multi-client
+  - docker push shaddass/multi-nginx
+  - docker push shaddass/multi-server
+  - docker push shaddass/multi-worker
