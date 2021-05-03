@@ -18,3 +18,18 @@ after_sucess:
   - docker push shaddass/multi-nginx
   - docker push shaddass/multi-server
   - docker push shaddass/multi-worker
+
+deploy: 
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "multi-docker"
+  env: "Multidocker-env"
+  bucket_name: "elasticbeanstalk-us-east-2-234938260601"
+  bucket_path: "docker-multi"
+  on:
+    branch: master
+
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+
+language: generic
